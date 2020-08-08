@@ -83,18 +83,37 @@ main .main-second .main-card-section {
    overflow: hidden;
    border: 1px solid black;
    margin: 2px;
-   background-color: lightcoral;
 }
 .card:hover {
    cursor: pointer;
    border: 2px solid #dfe1e5;
 }
+.card .card-details .card-specs {
+   display: none;
+}
+.is-active {
+   background-color: white;
+}
 .is-active .card-image {
    display: none;
 }
-.is-active .card-details {
+.is-active .card-details .card-name {
    display: none;
 }
+.is-active .card-details .card-specs {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   margin: 30px 10px 10px 10px;
+   font-size: 20px;
+   width: 100%;
+   height: 100%;
+   text-align: center;
+}
+.is-active .card-details .card-specs p {
+   margin-bottom: 20px;
+}
+
 
 
 main .main-second .main-card-section .card .card-image {
@@ -108,11 +127,11 @@ main .main-second .main-card-section .card .card-image img {
    z-index: 2;
 }
 
-main .main-second .main-card-section .card-details div {
+main .main-second .main-card-section .card-details .card-name {
    border: 1px solid black;
    position: relative;
+   margin: 0 auto;
    bottom: 40px;
-   left: 30px;
    background-position-x: 20px;
    z-index: 3;
    width: 80%;
@@ -120,9 +139,6 @@ main .main-second .main-card-section .card-details div {
    background-color: white;
    border-radius: 10px;
    text-align: center;
-}
-main .main-second .card .card-details h4 {
-   margin: 20px;
 }
 
 main .main-second .arrow-container {
@@ -141,4 +157,14 @@ main .main-second .arrow-container {
 footer {
    height: 60px;
    border-bottom: 2px solid #dfe1e5;
+}
+
+
+@media screen and (max-width: 767px) {
+
+   main .main-second .main-card-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+   }
 }
