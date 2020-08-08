@@ -4,6 +4,7 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" href="/css/style.css">
+   <link rel="stylesheet" href="/css/font.css">
    <title>Rick and Morty API</title>
 </head>
 <body>
@@ -11,20 +12,61 @@
       <div>
          <img class="logo" src="/image/logo.png" alt="">
       </div>
-      <div class="input-container">
-         <input type="text" placeholder="Ingresa ID o nombre del personaje" name="" id="input-search">
-      </div>
       <nav>
          <ul>
-            <li>Facebook</li>
-            <li>Twitter</li>
-            <li>Instagram</li>
-            <li>Github</li>
+            <li><a href=""><img src="/image/facebook.png" alt=""></a></li>
+            <li><a href=""><img src="/image/twitter.png" alt=""></a></li>
+            <li><a href=""><img src="/image/instagram.png" alt=""></a></li>
+            <li><a href=""><img src="/image/github.png" alt=""></a></li>
          </ul>
       </nav>
    </header>
    <main>
-
+      <section class="main-first">
+         <div class="input-container">
+            <input type="text" placeholder="Ingresa ID o nombre del personaje" name="" id="input-search">
+         </div>
+      </section>
+      <section class="main-second">
+         <div class="arrow-container">
+            <span class="icon-arrow-left"></span>
+         </div>
+         <section class="main-card-section">
+            <div class="card">
+               <div class="card-image">
+                  <img src="/image/2.jpg" alt="">
+               </div>
+               <div class="card-details">
+                  <div>
+                     <h1>Morty</h1>
+                  </div>
+                  <!-- <h4>Genero:Masculino</h4>
+                  <h4>Especie:Humano</h4> -->
+               </div>
+            </div>
+            <div class="card">
+            </div>
+            <div class="card">
+            </div>
+            <div class="card">
+            </div>
+            <div class="card">
+            </div>
+            <div class="card">
+            </div>
+            <div class="card">
+            </div>
+            <div class="card">
+            </div>
+         </section>
+         <div class="arrow-container">
+            <span class="icon-arrow-right"></span>
+         </div>
+      </section>
    </main>
+   <footer>
+
+   </footer>
 </body>
+<script src="/js/listener.js"></script>
 </html>
