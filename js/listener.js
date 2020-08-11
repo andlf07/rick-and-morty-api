@@ -1,16 +1,12 @@
-const card = document.querySelector('.card');
+const card = document.querySelector('.main-card-section');
 
 
-
-
-const cardAction = () => {
-   if(card.classList.contains('is-active')) {
-      card.classList.remove('is-active');
+const cardAction = (e) => {
+   if(e.path[2].classList.contains('is-active')) {
+      e.path[2].classList.remove('is-active');
    } else {
-      card.classList.add('is-active');
+      e.path[2].classList.add('is-active');
    }
 }
-
-
 
 card.addEventListener('click', cardAction)
