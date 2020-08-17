@@ -88,7 +88,7 @@ main .main-first .main-details .main-info-details .main-specs p {
    font-weight: 400;
    margin-bottom: 10px;
 }
-main .main-first .main-details .main-info-details .icon-cross {
+main .main-first .main-details .icon-cross {
    color: red;
    position: absolute;
    top: 91px;
@@ -193,6 +193,9 @@ main .main-second .arrow-container {
 
 
 footer {
+   display: flex;
+   justify-content: center;
+   align-items: center;
    height: 60px;
    border-bottom: 2px solid #dfe1e5;
 }

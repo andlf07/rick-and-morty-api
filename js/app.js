@@ -1,105 +1,30 @@
-let API;
-let data;
+const ui = new Interfaz;
+const getData = new APIs();
 let arr;
-//Creando  Cards en insertando
-const insertCardsHtml = (data) => {
-   const container = document.querySelector('.main-card-section');
-   const div = document.createElement('div');
-   div.className = 'card';
-   div.setAttribute('id', `${data.id}`)
-   let htmlTemplate = `
-         <div class="card-image">
-            <img src=${data.image} alt="">
-         </div>
-         <div class="card-details">
-         <div class="card-name">
-            <h1>${data.name}</h1>
-         </div>
-         <div class="card-specs">
-            <p>Gender: ${data.gender}</p>
-            <p>Species: ${data.species}</p>
-            <p>Status: ${data.status}</p>
-            <p>Origin: ${data.origin.name}</p>
-            <p>Location: ${data.location.name}</p>
-         </div>
-         </div>`;
 
-
-   container.appendChild(div).innerHTML = htmlTemplate;
-}
-
-const mainDisplayCard = (data) => {
-   const container = document.querySelector('.main-first');
-   const div = document.createElement('div');
-   div.className = 'main-details';
-   div.setAttribute('id', `${data.id}`)
-   let htmlTemplate = `
-         <div class="main-img-details">
-            <img src="${data.image}" alt="">
-         </div>
-         <div class="main-info-details">
-            <span class="icon-cross"></span>
-               <div class="main-name">
-                  <h1>${data.name}</h1>
-               </div>
-               <div class="main-specs">
-                  <p>Gender: ${data.gender}</p>
-                  <p>Species: ${data.species}</p>
-                  <p>Status: ${data.status}</p>
-                  <p>Origin: ${data.origin}</p>
-                  <p>Location: ${data.location}</p>
-               </div>
-          </div>
-   `;
-   container.appendChild(div).innerHTML = htmlTemplate;
-
-}
-//Obteniendo Datos para MAIN-FIRST
-const dataMainFirst = async (id) => {
-   const url = `https://rickandmortyapi.com/api/character/${id}`;
-   const urlData = await fetch(url);
-   data = await urlData.json();
-   mainDisplayCard(data);
-}
-
-
-
-
-//Obteniendo Datos
-const randomData = async (API) => {
-   const urlData = await fetch(API);
-   data = await urlData.json();
-   insertCardsHtml(data);
-}
 
 //Realizando Busqueda por ID
-const input = document.querySelector('.search')
-input.addEventListener('keyup', function(e) {
-   if(document.querySelector('.main-first .main-details')) {
-      document.querySelector('.main-first .main-details').remove()
-   } else {
-      dataMainFirst(e.target.value)
+const mainDetails = document.querySelectorAll('.main-details');
+const input = document.querySelector('.search');
+input.addEventListener('keypress', function(e) {
+   if(e.keyCode === 13) {
+      if(document.querySelector('.main-details')) {
+         document.querySelector('.main-details').remove()
+      }
+      getData.dataMainFirst(e.target.value)
+         .then(data => ui.mainDisplayCard(data))
+         .then(response =>          document.querySelector('.icon-cross').addEventListener('click', function() {
+            document.querySelector('.main-details').remove()
+        }))
    }
 })
 
 
 
-
-
-
-//Generando numero ID random para la URL
-const noRepeat = () => {
-   arr = [];
-   while(arr.length < 8) {
-      let r = Math.floor(Math.random()*591) + 1;
-      if(arr.indexOf(r) === -1) arr.push(r);
-   }
-   for(let i = 0; i < arr.length; i++) {
-      API = `https://rickandmortyapi.com/api/character/${arr[i]}`;
-      return API
-   }
+//Eliminando mainDetails
+const deleteDetails = () => {
+      document.querySelector('.main-details').remove()
 }
-
 
 //Simulando carga de datos con el gif
 const gifDisplay = (display) => {
@@ -110,11 +35,11 @@ const gifDisplay = (display) => {
 // EventListener al cargar DOCUMENTO generar las cards
 document.addEventListener("DOMContentLoaded", function() {
    for(let i = 0; i < 8; i++) {
-      randomData(noRepeat())
+      getData.randomData(noRepeat())
+         .then(data => ui.insertCardsHtml(data))
    }
 
 })
-
 
 //EventListener CLICK a acada carta y activar la otra cara
 const card = document.querySelector('.main-card-section');
@@ -127,13 +52,6 @@ const cardAction = (e) => {
    }
 }
 
-card.addEventListener('click', cardAction)
-card.addEventListener('click', function(e) {
-   console.log(e)
-})
-
-
-
 //EventeListener ARROWs
 //LEFT
 const arrowLeft = document.getElementById('arrow-left');
@@ -142,23 +60,23 @@ arrowLeft.addEventListener('click', function() {
    gifDisplay('block');
    setTimeout(() => {
     for(let i = 0; i < 8; i++) {
-         randomData(noRepeat());
-         insertCardsHtml(randomData(noRepeat()))
+      getData.randomData(noRepeat())
+         .then(data => ui.insertCardsHtml(data))
       }
       gifDisplay('none')
    }, 3000)
 })
 //RIGHT
-const arrowRight = document.querySelector('.icon-arrow-right');
-arrowRight.addEventListener('click', function() {
-   document.querySelectorAll('.card').forEach(element => element.remove())
-   gifDisplay('block');
-   setTimeout(() => {
-      let v = arr;
-    for(let i = 0; i < v.length; i++) {
-         API = `https://rickandmortyapi.com/api/character/${v[i]}`;
-         randomData(API);
-      }
-      gifDisplay('none')
-   }, 3000)
-})
+// const arrowRight = document.querySelector('.icon-arrow-right');
+// arrowRight.addEventListener('click', function() {
+//    document.querySelectorAll('.card').forEach(element => element.remove())
+//    gifDisplay('block');
+//    setTimeout(() => {
+//       let v = arr;
+//     for(let i = 0; i < v.length; i++) {
+//          API = `https://rickandmortyapi.com/api/character/${v[i]}`;
+//          randomData(API);
+//       }
+//       gifDisplay('none')
+//    }, 3000)
+// })
