@@ -6,6 +6,7 @@ class Interfaz {
       div.className = 'card';
       div.setAttribute('id', `${data.id}`)
       let htmlTemplate = `
+            <div><span class="icon-star-empty"></span></div>
             <div class="card-image">
                <img src=${data.image} alt="">
             </div>
@@ -21,8 +22,7 @@ class Interfaz {
                <p>Location: ${data.location.name}</p>
             </div>
             </div>`;
-   
-   
+
       container.appendChild(div).innerHTML = htmlTemplate;
    }
 
@@ -44,11 +44,26 @@ class Interfaz {
                      <p>Gender: ${data.gender}</p>
                      <p>Species: ${data.species}</p>
                      <p>Status: ${data.status}</p>
-                     <p>Origin: ${data.origin}</p>
-                     <p>Location: ${data.location}</p>
+                     <p>Origin: ${data.origin.name}</p>
+                     <p>Location: ${data.location.name}</p>
                   </div>
              </div>
       `;
       container.appendChild(div).innerHTML = htmlTemplate;
+   }
+   favoritesDisplay(data) {
+      const container = document.querySelector('.favorite-display');
+      const div = document.createElement('div');
+      div.className = 'card-fav';
+      div.setAttribute('id', `${data.id}`)
+      div.style.backgroundImage = `url(${data.image})`
+      let htmlTemplate = `
+            <span class="icon-cross xIcon-fav" id="xIcon-fav"></span>
+            <div class="card-image-fav">
+            </div>
+            <div class="card-name-fav">
+               <h1>${data.name}</h1>
+            </div> `
+      container.appendChild(div).innerHTML = htmlTemplate
    }
 }
