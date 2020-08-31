@@ -1,5 +1,4 @@
 class Interfaz {
-
    insertCardsHtml(data) {
       const container = document.querySelector('.main-card-section');
       const div = document.createElement('div');

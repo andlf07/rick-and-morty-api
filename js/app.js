@@ -8,12 +8,34 @@ let arr;
 //Realizando Busqueda por ID
 const input = document.querySelector('.search');
 input.addEventListener('keypress', function(e) {
+   const urlById = `https://rickandmortyapi.com/api/character/${e.target.value}`;
+   const urlByName = `https://rickandmortyapi.com/api/character/?name=${e.target.value}`;
    if(e.keyCode === 13) {
       if(document.querySelector('.main-details')) {
          document.querySelector('.main-details').remove()
       }
-      getData.dataMainFirst(e.target.value)
-         .then(data => ui.mainDisplayCard(data))
+      if(parseInt(e.target.value)) {
+         getData.dataMainFirst(urlById)
+            .then(data => ui.mainDisplayCard(data))
+      } else {
+         getData.dataMainFirst(urlByName)
+            .then(data => {
+               if(e.target.value === '') {
+                  alert('Agregar un ID o Nombre')
+               } else {
+                  const div = document.querySelectorAll('.card');
+                  div.forEach(element => {
+                     element.remove()
+                  })
+                  for(let i = 1; i <= data.info.pages; i++) {
+                     const urlPage = `https://rickandmortyapi.com/api/character/?page=${i}&name=${e.target.value}`;
+                     getData.dataMainFirst(urlPage)
+                        .then(data => data.results.forEach(element => ui.insertCardsHtml(element)))
+                  }
+               }
+            })
+            .catch(error => console.log(error))
+      }
    }
 
 })
@@ -78,16 +100,6 @@ document.addEventListener("DOMContentLoaded", function() {
          })
       }
    setTimeout(() => {
-      const card = document.querySelectorAll('.card');
-      card.forEach(element => element.addEventListener('click', function() {
-         if(element.classList.contains('is-active')) {
-            element.classList.remove('is-active')
-         } else {
-            element.classList.add('is-active')
-         }
-      }))
-   }, 1000)
-   setTimeout(() => {
       const starIcon = document.querySelectorAll('.icon-star-empty')
       starIcon.forEach(element => element.addEventListener('click', function(e) {
          const url = `https://rickandmortyapi.com/api/character/${e.path[2].id}`
@@ -140,14 +152,19 @@ const cardAction = (element) => {
 
 
 const favorites = document.querySelector('.favorites');
-favorites.addEventListener('click', function(e) {
-   console.log(e)
-})
-
 favorites.addEventListener('click', isActive)
 
 
-
+const card = document.querySelector('.main-card-section');
+card.addEventListener('click', function(e) {
+   if(e.target.parentElement.parentElement.classList.contains('card')) {
+      if(e.target.parentElement.parentElement.classList.contains('is-active')) {
+         e.target.parentElement.parentElement.classList.remove('is-active')
+      } else {
+         e.target.parentElement.parentElement.classList.add('is-active')
+      }
+   }
+})
 
 
 
