@@ -21,10 +21,7 @@ header nav ul li a img {
    height: 30px;
    margin-top: 5px;
 }
-.logo {
-   height: 50px;
-   margin-top: 5px;
-}
+
 .input-container {
    width: 30%;
 }
@@ -44,42 +41,28 @@ header nav li {
    margin-right: 20px;
 
 }
-header .favorites {
+header .btn-container {
+   display: flex;
+   margin-left: 20px;
+}
+header .buttons {
+   margin: 5px;
    padding: 10px;
    text-align: center;
-   width: 7%;
+   width: 100%;
    font-weight: 400;
    border: 1px solid #76787e;
    border-radius: 15px;
    background-color: white;
    outline: none;
 }
-header .favorites:hover {
+
+header .buttons:hover {
    cursor: pointer;
 }
-.favorite-display {
-   display: flex;
-   flex-direction: column;
-   position: absolute;
-   background-color: white;
-   z-index: 4;
-   top: 0;
-   right: -100%;
-   width: 20vw;
-   height: 100%;
-   transition: .3s;
-   overflow: auto;
-   
-
-}
-.favorite-display.onview {
-   right: 0;
-}
-
 main {
    display: grid;
    grid-template-rows: auto auto;
-/*    background-image: url("/image/background.jpg");  */
    background-repeat: no-repeat;
    background-size: cover;
    width: 100%;
@@ -144,22 +127,22 @@ main .main-second {
 main .main-second .main-card-section {
    display: grid;
    grid-template-columns: repeat(4, 1fr);
-   grid-template-rows: repeat(2, 300px);
+   grid-template-rows: auto;
    grid-gap: 5px;
 }
 
 
 .card {
    width: 100%;
-   height: 100%;
+   height: 300px;
    background-color: white;
    border-radius: 15px;
    overflow: hidden;
    margin: 2px;
 }
 .card:hover {
-/*    cursor: pointer;
- */   border: 2px solid #dfe1e5;
+   cursor: pointer;
+   border: 2px solid #dfe1e5;
 }
 .card .card-details .card-specs {
    display: none;
@@ -199,13 +182,67 @@ main .main-second .main-card-section {
 .icon-star-empty:hover {
    cursor: pointer;
 }
+.card-location {
+   background-color: white;
+   width: 300px;
+   height: 200px;
+   border-radius: 15px;
+   padding: 20px;
+}
+.card-location h1 {
+   font-size: 26px;
+   border-bottom: 1px solid green;
+   margin-bottom: 10px;
+}
+.card-location p {
+   margin-bottom: 10px;
+}
+.menu-display {
+   display: flex;
+   flex-direction: column;
+   position: absolute;
+   background-color: white;
+   border-bottom-right-radius: 10px;
+   z-index: 9999;
+   top: 60px;
+   left: -100%;
+   width: 15%;
+   height: 50%;
+   transition: .3s;
+   overflow: auto;
+   padding: 10px;
+}
+.menu-display.onview {
+   left: 0;
+}
+.buttons.btn-menu {
+   width: 100px;
+}
+.menu-display p {
+   border: 1px solid #76787e;
+   margin: 5px;
+   padding: 10px;
+   width: 100%;
+   border-radius: 15px;
 
+}
 .favorite-display {
    display: flex;
    flex-direction: column;
    align-items: center;
+   position: absolute;
+   background-color: white;
+   z-index: 4;
+   top: 0;
+   right: -100%;
+   width: 20%;
+   height: 100%;
+   transition: .3s;
+   overflow: auto;
 }
-
+.favorite-display.onview {
+   right: 0;
+}
 .favorite-display .card-fav {
    display: flex;
    width: 90%;
@@ -297,6 +334,17 @@ footer {
 .gif img {
    width: 100%;
    height: 100%;
+}
+
+.card-episode {
+   background-color: white;
+   width: 250px;
+   height: 150px;
+   border-radius: 15px;
+   padding: 15px;
+}
+.card-episode p {
+   margin: 10px 0;
 }
 
 

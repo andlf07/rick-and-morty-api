@@ -1,8 +1,26 @@
+import APIs from './api.js';
+import Interfaz from './class.js';
+import SaveInStorage from './localStorage.js';
+
+
 const ui = new Interfaz;
 const getData = new APIs();
-const history = [];
+const saveStorage = new SaveInStorage;
+let history = [];
+const allCountAPI = []
+let API;
 let arr;
+let count;
 
+
+//Generando numero ID random para la URL
+const noRepeat = () => {
+   arr = [];
+   while(arr.length < 8) {
+         let r = Math.floor(Math.random()* 571) + 1;
+         if(arr.indexOf(r) === -1) arr.push(r);
+      }
+}
 
 
 //Realizando Busqueda por ID
@@ -15,74 +33,27 @@ input.addEventListener('keypress', function(e) {
          document.querySelector('.main-details').remove()
       }
       if(parseInt(e.target.value)) {
-         getData.dataMainFirst(urlById)
+         getData.dataAPI(urlById)
             .then(data => ui.mainDisplayCard(data))
+      } else if(e.target.value === '') {
+         alert('Only IDs and Name')
       } else {
-         getData.dataMainFirst(urlByName)
+         getData.dataAPI(urlByName)
             .then(data => {
-               if(e.target.value === '') {
-                  alert('Agregar un ID o Nombre')
-               } else {
-                  const div = document.querySelectorAll('.card');
-                  div.forEach(element => {
-                     element.remove()
-                  })
-                  for(let i = 1; i <= data.info.pages; i++) {
-                     const urlPage = `https://rickandmortyapi.com/api/character/?page=${i}&name=${e.target.value}`;
-                     getData.dataMainFirst(urlPage)
-                        .then(data => data.results.forEach(element => ui.insertCardsHtml(element)))
-                  }
+               const div = document.querySelectorAll('.main-card-section > div');
+               div.forEach(element => {
+                  element.remove()
+               })
+               for(let i = 1; i <= data.info.pages; i++) {
+                  const urlPage = `https://rickandmortyapi.com/api/character/?page=${i}&name=${e.target.value}`;
+                  getData.dataAPI(urlPage)
+                     .then(data => data.results.forEach(element => ui.insertCardsHtml(element, '.main-card-section', 'div')))
                }
             })
             .catch(error => console.log(error))
       }
-   }
-
-})
-
-//Guardar datos en Local Storage
-const saveData = (data) => {
-   let saveId;
-   //Toma el valor del Localstorage
-   saveId = loadData();
-   //Agregar a localStorage el favorito
-   saveId.push(data);
-   localStorage.setItem('character', JSON.stringify(saveId));
-}
-
-//Loading data LocalStorage// Comprueba elementos
-const loadData = () => {
-   let loadId;
-   //Comprobamos localStorage
-   if(localStorage.getItem('character') === null) {
-      loadId = [];
-   } else {
-      loadId = JSON.parse(localStorage.getItem('character'));
-   }
-   return loadId;
-}
-//Deleted form localStorage
-const deletedStorage = (xs) => {
-   let characterD;
-
-   characterD = loadData();
-
-   characterD.forEach(function(charact, index) {
-      if(charact.id === parseInt(xs)) {
-         characterD.splice(index, 1);
       }
-   })
-   localStorage.setItem('character', JSON.stringify(characterD));
-}
-
-//Load favorites LocalStorage
-const loadFavorites = () => {
-   let character;
-   character = loadData();
-   character.forEach(function(character) {
-      ui.favoritesDisplay(character);
-   })
-}
+})
 
 //Simulando carga de datos con el gif
 const gifDisplay = (display) => {
@@ -92,25 +63,25 @@ const gifDisplay = (display) => {
 
 // EventListener al cargar DOCUMENTO generar las cards
 document.addEventListener("DOMContentLoaded", function() {
-   for(let i = 0; i < 8; i++) {
-      getData.randomData(noRepeat())
-         .then(data =>  {
-            ui.insertCardsHtml(data)
-            history.push(data)
+   noRepeat();
+   arr.forEach(element => {
+      API = `https://rickandmortyapi.com/api/character/${element}`;
+      getData.dataAPI(API)
+         .then(data => {
+            ui.insertCardsHtml(data);
          })
-      }
-   setTimeout(() => {
-      const starIcon = document.querySelectorAll('.icon-star-empty')
-      starIcon.forEach(element => element.addEventListener('click', function(e) {
-         const url = `https://rickandmortyapi.com/api/character/${e.path[2].id}`
-         getData.randomData(url)
-            .then(data => {
-               ui.favoritesDisplay(data)
-               saveData(data)
-            })
-      }))
-   }, 1000)
-   loadFavorites();
+   })
+   history.push(arr)
+   //GetAllLocation count
+   getData.dataAPI("https://rickandmortyapi.com/api/location")
+   .then(data => ui.renderAllLocation(data))
+   //GetallEpisode Count
+   getData.dataAPI("https://rickandmortyapi.com/api/episode")
+   .then(data => ui.renderAllEpisode(data))
+   //GetAllcharacter Count
+   getData.dataAPI("https://rickandmortyapi.com/api/character")
+      .then(data => ui.renderAllCharacter(data))
+   saveStorage.loadFavorites(ui.favoritesDisplay)
 })
 
 
@@ -128,33 +99,39 @@ xIcon.addEventListener('click', function(e) {
    if(e.target.classList.contains('xIcon-fav')) {
       e.target.parentElement.remove();
    }
-   deletedStorage(e.target.parentElement.id)
+   saveStorage.deletedStorage(e.target.parentElement.id)
 })
 
-
-const cardAction = (element) => {
-   if(element.classList.contains('is-active')) {
-      element.classList.remove('is-active');
-   } else {
-      element.classList.add('is-active');
-   }
-}
-
- const isActive = () => {
-    const x = document.querySelector('.favorite-display')
+function displayOn(name) {
+   let x = document.querySelector(name);
    if(x.classList.contains('onview')) {
       x.classList.remove('onview');
    }
    else {
-      x.classList.add('onview')
+      x.classList.add('onview');
    }
  }
 
+function viewOn() {
+   switch(this.classList[1]) {
+      case 'fav-btn':
+         displayOn('.favorite-display');
+      break;
+      case 'menu-btn':
+         displayOn('.menu-display');
+      break;
+   }
+}
+//Menu Button
+const menuBtn = document.querySelector('.menu-btn');
+menuBtn.addEventListener('click', viewOn)
 
-const favorites = document.querySelector('.favorites');
-favorites.addEventListener('click', isActive)
+//Favorite button
+const favBtn = document.querySelector('.fav-btn');
+favBtn.addEventListener('click', viewOn)
 
 
+//Onclick adding to favoritesDisplay
 const card = document.querySelector('.main-card-section');
 card.addEventListener('click', function(e) {
    if(e.target.parentElement.parentElement.classList.contains('card')) {
@@ -164,9 +141,49 @@ card.addEventListener('click', function(e) {
          e.target.parentElement.parentElement.classList.add('is-active')
       }
    }
+   if(e.target.classList.contains('icon-star-empty')) {
+      const url = `https://rickandmortyapi.com/api/character/${e.path[2].id}`
+      getData.dataAPI(url)
+         .then(data => {
+            ui.favoritesDisplay(data)
+            saveStorage.saveData(data)
+         })
+   }
+})
+
+function getAllCount(mainAPI, render) {
+   const div = document.querySelectorAll('.main-card-section > div');
+   div.forEach(element => {
+      element.remove()
+   })
+   let urlPage = mainAPI;
+   getData.dataAPI(mainAPI)
+      .then(data => {
+         for(let i = 1; i <= data.info.pages; i++) {
+            urlPage += `?page=${i}`;
+            getData.dataAPI(urlPage)
+               .then(data => data.results.forEach(element => render(element)))
+         }
+      })
+}
+
+//All Character btn
+const allCharacter = document.querySelector('.btn-allcharacter');
+allCharacter.addEventListener('click', function() {
+   getAllCount("https://rickandmortyapi.com/api/character/", ui.insertCardsHtml)
 })
 
 
+//All location
+const allLocation = document.querySelector('.btn-location');
+allLocation.addEventListener('click', function() {
+   getAllCount("https://rickandmortyapi.com/api/location/", ui.renderLocation)
+})
+
+const allEpisode = document.querySelector('.btn-episode');
+allEpisode.addEventListener('click', function() {
+   getAllCount("https://rickandmortyapi.com/api/episode/", ui.renderEpisode)
+})
 
 //EventeListener ARROWs
 //LEFT
@@ -175,26 +192,31 @@ arrowLeft.addEventListener('click', function() {
    document.querySelectorAll('.card').forEach(element => element.remove())
    gifDisplay('block');
    setTimeout(() => {
-    for(let i = 0; i < 8; i++) {
-      getData.randomData(noRepeat())
-         .then(data =>  {
-            ui.insertCardsHtml(data)
-            history.push(data)
+      noRepeat();
+      arr.forEach(element => {
+         API = `https://rickandmortyapi.com/api/character/${element}`;
+         getData.dataAPI(API)
+            .then(data => {
+               ui.insertCardsHtml(data);
          })
-      }
+      })
       gifDisplay('none')
    }, 3000)
+   history.push(arr)
 })
 
 //RIGHT
 const arrowRight = document.querySelector('.icon-arrow-right');
 arrowRight.addEventListener('click', function() {
-   let current = history.length;
-   current -= 9;
-   let prevData = history[current];
-   document.querySelectorAll('.card').forEach(element => element.remove())
-   for(let i = 0; i < 8; i++) {
-      ui.insertCardsHtml(history[current--])
-   }
-   console.log(prevData)
+   let current = history.length - 1;
+   const div = document.querySelectorAll('.main-card-section > div');
+   div.forEach(element => element.remove())
+   history[current].forEach(element => {
+      API = `https://rickandmortyapi.com/api/character/${element}`;
+      getData.dataAPI(API)
+         .then(data => ui.insertCardsHtml(data))
+   })
+
+   console.log(history[current])
+
 })
